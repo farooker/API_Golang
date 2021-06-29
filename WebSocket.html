@@ -1,0 +1,85 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Go WebSocket Tutorial</title>
+  </head>
+  <body>
+    <h2>Simple websocket</h2>
+    <canvas id="myChart" width="400" height="400"></canvas>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.4.0/chart.min.js" integrity="sha512-JxJpoAvmomz0MbIgw9mx+zZJLEvC6hIgQ6NcpFhVmbK1Uh5WynnRTTSGv3BTZMNBpPbocmdSJfldgV5lVnPtIw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        var ctx = document.getElementById('myChart').getContext('2d');
+        let socket = new WebSocket("ws://127.0.0.1:8080/websocket");
+        var myBarChart= new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Roll', 'Pitch', 'Yaw', 'Heave', 'Surge', 'Sway'],
+                datasets: [{
+                    label: '# of Votes',
+                    data: [1, 19, 3, 5, 2, 3],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+        console.log("Attempting Connection...");
+
+        socket.onopen = () => {
+            console.log("Successfully Connected");
+            socket.send("Hi From the Client!")
+        };
+        
+        socket.onmessage = function (event) {
+            console.log(JSON.parse(event.data));
+            var recived =JSON.parse(event.data)
+            myBarChart.data.datasets[0].data[0] = recived.Roll;
+            myBarChart.data.datasets[0].data[1] = recived.Pitch;
+            myBarChart.data.datasets[0].data[2] = recived.Yaw;
+            myBarChart.data.datasets[0].data[3] = recived.Heave;
+            myBarChart.data.datasets[0].data[4] = recived.Surge;
+            myBarChart.data.datasets[0].data[5] = recived.Sway;
+            myBarChart.update();
+         }
+        
+        socket.onclose = event => {
+            console.log("Socket Closed Connection: ", event);
+            socket.send("Client Closed!")
+        };
+
+        socket.onerror = error => {
+            console.log("Socket Error: ", error);
+        };
+
+
+     
+   
+
+      
+    </script>
+   
+  </body>
+</html>
