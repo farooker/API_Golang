@@ -5,6 +5,8 @@ import (
 	"Admin-Tools-Api/Utility"
 	"fmt"
 	"net/http"
+	"time"
+
 	"github.com/julienschmidt/httprouter"
 	//"log"
 )
@@ -16,10 +18,24 @@ func OutClosures() func() int {
       return GFG
   }
 }
+func routine1() {
+  
+	for i := 0; i < 20; i++ {
+		fmt.Println("routine  1")	
+	}
+}
+func routine2() {
+	for i := 0; i < 20; i++ {
+		fmt.Println("routine  2")	
+	}
+}
+func routineCH(c chan int,paload int) {
+   c <- paload
+}
 
 func main() {
 
-   // Closures  in funtion
+   // Closures  in funtion 
 	GFG := 0
     counter := func() int {
        GFG += 1
@@ -28,14 +44,34 @@ func main() {
   
 	fmt.Println(counter())
 	fmt.Println(counter())
-
+ // Closures  out funtion
 	_OutClosures := OutClosures()
 	fmt.Println(_OutClosures())
     fmt.Println(_OutClosures())
 
+	// run  แบบ  Concurrent
+	go  routine1()
+    go  routine2()
+	time.Sleep(2*time.Second)
 
+	// Channel and Deadlock
 
+	ch := make(chan int,1)  //กรณี นี้หาก ไม่กำหนด size  buffer จะเกิด  Deadlock
+	ch <-1
+	fmt.Println(<-ch)
+	ch <-2
+	fmt.Println(<-ch)
+	time.Sleep(1*time.Second)
 
+	// Chanel โดย  แยก routine
+	chr := make(chan int)
+	go routineCH(chr,20)
+	go routineCH(chr,21)
+	go routineCH(chr,22)
+	fmt.Println(<-chr)
+	fmt.Println(<-chr)
+	fmt.Println(<-chr)
+	time.Sleep(1*time.Second)
 
 
 
