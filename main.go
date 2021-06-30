@@ -9,7 +9,43 @@ import (
 	//"log"
 )
 
+func OutClosures() func() int {
+    GFG := 0
+    return func() int {
+      GFG += 1
+      return GFG
+  }
+}
+
 func main() {
+
+   // Closures  in funtion
+	GFG := 0
+    counter := func() int {
+       GFG += 1
+       return GFG
+    }
+  
+	fmt.Println(counter())
+	fmt.Println(counter())
+
+	_OutClosures := OutClosures()
+	fmt.Println(_OutClosures())
+    fmt.Println(_OutClosures())
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	utility.InitializeConfig()
 	router := httprouter.New()
