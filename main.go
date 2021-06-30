@@ -2,7 +2,7 @@ package main
 
 import (
 	routes "Admin-Tools-Api/Routers"
-	"Admin-Tools-Api/_Utility"
+	"Admin-Tools-Api/Utility"
 	"fmt"
 	"net/http"
 	"github.com/julienschmidt/httprouter"

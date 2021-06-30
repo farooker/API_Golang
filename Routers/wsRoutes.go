@@ -1,7 +1,7 @@
 package routes
 
 import (
-	controller "Admin-Tools-Api/_Controller"
+	controller "Admin-Tools-Api/Controller"
 	"github.com/julienschmidt/httprouter"
 )
 
