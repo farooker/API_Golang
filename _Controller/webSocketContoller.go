@@ -18,10 +18,9 @@ type Axis struct {
 }
 func Websocket(res http.ResponseWriter, req *http.Request, ps httprouter.Params) {
 	websocket.Handler(ReceiveSend).ServeHTTP(res,req)
-	
   }
 func ReceiveSend(ws *websocket.Conn) {
-	fmt.Printf("recvSendServer %#v\n", ws)
+	//fmt.Printf("recvSendServer %#v\n", ws)
 	for {
 		var buf string
 		err := websocket.Message.Receive(ws, &buf)
@@ -48,10 +47,7 @@ func ReceiveSend(ws *websocket.Conn) {
 			}
 			//fmt.Printf("send:%q\n", string(mapB))
 			time.Sleep(1 * time.Second)
-  
 		}
-	
-	
 	}
 	fmt.Println("recvSendServer finished")
 }
